@@ -1,0 +1,79 @@
+{% extends "base.html" %}{% block title %}{{d.concept.name}}{% endblock %}{%
+block content %}<a href="/">← Tất cả khái niệm</a>
+<section class="hero my-3">
+  <small>KHÁI NIỆM</small>
+  <h1>{{d.concept.name}}</h1>
+  <p>{{d.concept.definition}}</p>
+</section>
+<div class="row g-3">
+  <div class="col-lg-8">
+    <section class="cardbox">
+      <h2>Tính chất & dấu hiệu nhận biết</h2>
+      {% for p in d.properties if p %}
+      <article class="knowledge">
+        <b>{{p.category|default('Tính chất',true)}}</b>
+        <p>{{p.content}}</p>
+      </article>
+      {% else %}
+      <p>Chưa có tính chất.</p>
+      {% endfor %}
+    </section>
+    <section class="cardbox mt-3">
+      <h2>Định lý</h2>
+      {% for t in d.theorems if t %}
+      <article class="knowledge">
+        <h3>{{t.name}}</h3>
+        <p>{{t.statement}}</p>
+        <p><b>Điều kiện:</b> {{t.conditions}}</p>
+        <p><b>Kết luận:</b> {{t.conclusion}}</p>
+      </article>
+      {% else %}
+      <p>Chưa có định lý.</p>
+      {% endfor %}
+    </section>
+    <section class="cardbox mt-3">
+      <h2>Công thức</h2>
+      {% for f in d.formulas if f %}
+      <article class="knowledge">
+        <b>{{f.name}}</b>
+        <p><code>{{f.expression}}</code></p>
+        <p>{{f.conditions}}</p>
+        {% if f.variables %}
+        <ul>
+          {% for v in f.variables %}
+          <li>{{v}}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </article>
+      {% else %}
+      <p>Chưa có công thức.</p>
+      {% endfor %}
+    </section>
+  </div>
+  <div class="col-lg-4">
+    <section class="cardbox">
+      <h2>Mẹo học</h2>
+      {% for t in d.tips if t %}
+      <p>{{t.content}}</p>
+      {% else %}
+      <p>Chưa có mẹo.</p>
+      {% endfor %}
+      <hr />
+      <h2>Bài tập</h2>
+      {% for e in d.exercises if e %}
+      <p>
+        {{e.question}}
+        <span class="badge text-bg-secondary">{{e.difficulty}}</span>
+      </p>
+      {% else %}
+      <p>Chưa có bài tập.</p>
+      {% endfor %}<a
+        class="btn btn-primary w-100"
+        href="/practice?concept={{d.concept.id}}"
+        >Luyện tập khái niệm này</a
+      >
+    </section>
+  </div>
+</div>
+{% endblock %}

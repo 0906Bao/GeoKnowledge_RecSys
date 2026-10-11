@@ -1,0 +1,94 @@
+
+{% extends "base.html" %}
+
+{% block title %}Luyện tập{% endblock %}
+
+{% block content %}
+<h1>Luyện tập hình học</h1>
+
+<p class="text-secondary">
+    Nộp bài để xem phản hồi và lời giải. Bản hiện tại so khớp đáp án,
+    chưa chấm chứng minh tự luận.
+</p>
+
+<form class="row g-2 cardbox mb-3" method="GET" action="{{ url_for('practice') }}">
+    <div class="col-md-5">
+        <select class="form-select" name="concept">
+            <option value="">Tất cả khái niệm</option>
+            {% for c in concepts %}
+                <option value="{{ c.id }}"
+                    {% if cid == c.id|string %}selected{% endif %}>
+                    {{ c.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <select class="form-select" name="difficulty">
+            <option value="">Tất cả độ khó</option>
+            {% for x in ['Dễ', 'Trung bình', 'Khó'] %}
+                <option value="{{ x }}"
+                    {% if difficulty == x %}selected{% endif %}>
+                    {{ x }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-primary w-100">
+            Lọc
+        </button>
+    </div>
+</form>
+
+<div class="row g-3">
+    {% for e in items %}
+        <div class="col-lg-6">
+            <article
+                class="cardbox exercise"
+                data-id="{{ e.id }}"
+                data-type="{{ e.exercise_type|default('FREE_RESPONSE', true) }}"
+            >
+                <span class="badge text-bg-secondary">
+                    {{ e.difficulty|default('Chưa phân loại', true) }}
+                </span>
+
+                <h2 class="h5 mt-2">
+                    {{ e.question|default('Chưa có nội dung câu hỏi', true) }}
+                </h2>
+
+                {% if e.exercise_type|default('FREE_RESPONSE', true) == 'MCQ' %}
+                    {% for o in e.options|default([], true) %}
+                        <label class="option">
+                            <input
+                                type="radio"
+                                name="a-{{ e.id }}"
+                                value="{{ o }}"
+                            />
+                            {{ o }}
+                        </label>
+                    {% endfor %}
+                {% else %}
+                    <textarea
+                        class="form-control answer"
+                        rows="2"
+                        placeholder="Nhập đáp án"
+                    ></textarea>
+                {% endif %}
+
+                <button type="button" class="btn btn-primary mt-3 submit">
+                    Nộp bài
+                </button>
+
+                <div class="feedback mt-3" hidden></div>
+            </article>
+        </div>
+    {% else %}
+        <div class="col-12">
+            <p>Chưa có bài tập phù hợp.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

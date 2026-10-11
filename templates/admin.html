@@ -1,0 +1,151 @@
+{% extends "base.html" %}{% block title %}Quản lý nội dung{% endblock %}{% block
+content %}
+<h1>Quản lý nội dung</h1>
+<div class="alert alert-warning">
+  Trang mẫu dành cho môi trường nội bộ; chưa có đăng nhập/phân quyền. Không công
+  khai ra Internet.
+</div>
+<ul class="nav nav-tabs">
+  {% for k,l in [('concept','Khái niệm'),('property','Tính
+  chất'),('theorem','Định lý'),('formula','Công thức'),('exercise','Bài tập')]
+  %}
+  <li class="nav-item">
+    <button
+      class="nav-link {% if loop.first %}active{% endif %}"
+      data-bs-toggle="tab"
+      data-bs-target="#{{k}}"
+    >
+      {{l}}
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+<div class="tab-content pt-3">
+  {% for k,l in [('concept','Khái niệm'),('property','Tính
+  chất'),('theorem','Định lý'),('formula','Công thức'),('exercise','Bài tập')]
+  %}
+  <div
+    class="tab-pane fade {% if loop.first %}show active{% endif %}"
+    id="{{k}}"
+  >
+    <form method="post" class="cardbox">
+      <input type="hidden" name="kind" value="{{k}}" />
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">ID</label
+          ><input class="form-control" name="id" required />
+        </div>
+        {% if k!='concept' %}
+        <div class="col-md-8">
+          <label class="form-label">Khái niệm liên quan</label
+          ><select class="form-select" name="concept_id" required>
+            {% for c in concepts %}
+            <option value="{{c.id}}">{{c.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}{% if k=='concept' %}
+        <div class="col-md-8">
+          <label class="form-label">Tên</label
+          ><input class="form-control" name="name" required />
+        </div>
+        <div class="col-12">
+          <label class="form-label">Định nghĩa</label
+          ><textarea class="form-control" name="definition" required></textarea>
+        </div>
+        <input type="hidden" name="type" value="Hình chính" />{% elif
+        k=='property' %}
+        <div class="col-md-4">
+          <label class="form-label">Nhóm</label
+          ><select class="form-select" name="category">
+            <option>Cạnh</option>
+            <option>Góc</option>
+            <option>Đường chéo</option>
+            <option>Dấu hiệu nhận biết</option>
+            <option>Tính chất</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Nội dung</label
+          ><textarea class="form-control" name="content" required></textarea>
+        </div>
+        {% elif k=='theorem' %}
+        <div class="col-12">
+          <label class="form-label">Tên định lý</label
+          ><input class="form-control" name="name" required />
+        </div>
+        <div class="col-12">
+          <label class="form-label">Phát biểu</label
+          ><textarea class="form-control" name="statement" required></textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Điều kiện</label
+          ><textarea class="form-control" name="conditions"></textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Kết luận</label
+          ><textarea class="form-control" name="conclusion"></textarea>
+        </div>
+        {% elif k=='formula' %}
+        <div class="col-md-6">
+          <label class="form-label">Tên</label
+          ><input class="form-control" name="name" required />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Biểu thức</label
+          ><input class="form-control" name="expression" required />
+        </div>
+        <div class="col-12">
+          <label class="form-label">Biến số (mỗi dòng một biến)</label
+          ><textarea class="form-control" name="variables"></textarea>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Điều kiện</label
+          ><textarea class="form-control" name="conditions"></textarea>
+        </div>
+        {% else %}
+        <div class="col-12">
+          <label class="form-label">Đề bài</label
+          ><textarea class="form-control" name="question" required></textarea>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Dạng</label
+          ><select class="form-select" name="exercise_type">
+            <option value="MCQ">Trắc nghiệm</option>
+            <option value="FREE_RESPONSE">Tự luận</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Độ khó</label
+          ><select class="form-select" name="difficulty">
+            <option>Dễ</option>
+            <option>Trung bình</option>
+            <option>Khó</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Đáp án</label
+          ><input class="form-control" name="correct_answer" required />
+        </div>
+        <div class="col-12">
+          <label class="form-label">Lựa chọn (mỗi dòng một lựa chọn)</label
+          ><textarea class="form-control" name="options"></textarea>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Lời giải</label
+          ><textarea class="form-control" name="solution"></textarea>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Các bước giải (mỗi dòng một bước)</label
+          ><textarea class="form-control" name="solution_steps"></textarea>
+        </div>
+        {% endif %}
+        <div class="col-12">
+          <button class="btn btn-primary">Lưu vào Neo4j</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

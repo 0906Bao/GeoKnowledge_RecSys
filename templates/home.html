@@ -1,0 +1,41 @@
+{% extends "base.html" %}{% block title %}Khám phá tri thức{% endblock %}{%
+block content %}
+<section class="hero mb-4">
+  <small>TỨ GIÁC</small>
+  <h1>Khám phá thế giới tứ giác</h1>
+  <p>
+    Tra cứu định nghĩa, tính chất, công thức và luyện tập trong đồ thị tri thức.
+  </p>
+</section>
+<form class="input-group mb-4">
+  <input
+    class="form-control"
+    name="q"
+    value="{{q}}"
+    placeholder="Tìm khái niệm..."
+  /><button class="btn btn-primary">Tìm</button>
+</form>
+<h2 class="h4">Các khái niệm</h2>
+<div class="row g-3 mb-4 concept-grid">
+  {% for c in items %}
+  <div class="col-md-4 col-lg-3 concept-card">
+    <a class="cardbox" href="/concept/{{c.id}}"
+      ><h3>{{c.name}}</h3>
+      <p>{{c.definition|default('Mở xem chi tiết.',true)|truncate(100)}}</p>
+      <b>Xem chi tiết →</b></a
+    >
+  </div>
+  {% else %}
+  <p>Chưa có dữ liệu. Chạy cypher/schema.cypher rồi cypher/seed.cypher.</p>
+  {% endfor %}
+</div>
+<section class="cardbox">
+  <h2 class="h4">Đồ thị phân cấp</h2>
+  <p>Kéo thả node; nhấp đúp để mở khái niệm.</p>
+  <div id="graph" data-url="/api/graph"></div>
+</section>
+{% if tips %}
+<h2 class="h4 mt-4">Mẹo học tập</h2>
+{% for t in tips %}
+<div class="alert alert-info">{{t.content}}</div>
+{% endfor %}{% endif %}{% endblock %}
